@@ -198,6 +198,8 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, bool fChe
 
         /** RVN START */
         // Find and handle all new OP_RVN_ASSET null data transactions
+        if(txout.scriptPubKey.IsAssetScript() && tx.IsCoinBase())
+            LogPrintf("ASSETCOINBASE TX %s\n",tx.GetHash().ToString());
         if (txout.scriptPubKey.IsNullAsset()) {
             CNullAssetTxData data;
             std::string address;

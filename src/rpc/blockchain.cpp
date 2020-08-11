@@ -870,6 +870,31 @@ UniValue getblockhash(const JSONRPCRequest& request)
     return pblockindex->GetBlockHash().GetHex();
 }
 
+UniValue searchassettxes(const JSONRPCRequest& request)
+{
+    if (request.fHelp || request.params.size() != 2)
+        throw std::runtime_error(
+            "searchassettxes startheight amount\n"
+            "\nReturns hash of block in best-block-chain at height provided.\n"
+            "\nArguments:\n"
+            "1. height         (numeric, required) The height index\n"
+            "\nResult:\n"
+            "\"hash\"         (string) The block hash\n"
+            "\nExamples:\n"
+            + HelpExampleCli("getblockhash", "1000")
+            + HelpExampleRpc("getblockhash", "1000")
+        );
+
+    LOCK(cs_main);
+
+    int nHeight = request.params[0].get_int();
+    int amt = request.params[1].get_int();
+    if (nHeight < 0 || nHeight > chainActive.Height())
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Block height out of range");
+
+    return SearchForAssetTxes(nHeight,amt);
+}
+
 UniValue getblockheader(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
@@ -1906,6 +1931,8 @@ static const CRPCCommand commands[] =
     { "blockchain",         "getblockdeltas",         &getblockdeltas,         {} },
     { "blockchain",         "getblockhashes",         &getblockhashes,         {} },
     { "blockchain",         "getblockhash",           &getblockhash,           {"height"} },
+    { "blockchain",         "searchassettxes",        &searchassettxes,        {"startheight","amt"} },
+
     { "blockchain",         "getblockheader",         &getblockheader,         {"blockhash","verbose"} },
     { "blockchain",         "getchaintips",           &getchaintips,           {} },
     { "blockchain",         "getdifficulty",          &getdifficulty,          {} },

@@ -3961,6 +3961,53 @@ static bool CheckBlockHeader(const CBlockHeader& block, CValidationState& state,
     return true;
 }
 
+bool SearchForAssetTxes(int startblock, int amount)
+{
+	CBlockIndex * pblockindex;
+	CBlock block;
+	int totalfound = 0;
+	std::vector<std::string> txids;
+
+	if (startblock > chainActive.Tip()->nHeight)
+	{
+		return false;
+	}
+	{
+		LOCK(cs_main);
+		pblockindex = chainActive[startblock];
+	}
+	//Now search backwards
+	for (unsigned int nCountBlocks = 1; nCountBlocks <= amount; nCountBlocks++)
+	{
+		if (ReadBlockFromDisk(block, pblockindex, GetParams().GetConsensus()))
+		{
+			for (const auto &txout: block.vtx[0]->vout)
+			{
+				if (txout.scriptPubKey.IsAssetScript())
+				{
+					totalfound++;
+					txids.push_back(block.vtx[0]->GetHash().ToString());
+					LogPrintf("Total found : %d\n", totalfound);
+				}
+			}
+			//Now that were have done iterating ,we set it to the prev index
+			pblockindex = pblockindex->pprev;
+		}
+		else
+		{
+			//Skip if we cant find the block
+			continue;
+		}
+	}
+	//Now we finished checkup,print all of the txids
+	for (int j = 0; j < txids.size(); j++)
+	{
+		//Print Strings stored in Vector 
+		LogPrintf("ASSETCOINBASE TX %s\n", txids[j]);
+	}
+    return true;
+}
+
 bool CheckBlock(const CBlock& block, CValidationState& state, const Consensus::Params& consensusParams, bool fCheckPOW, bool fCheckMerkleRoot, bool fDBCheck)
 {
     // These are checks that are independent of context.
