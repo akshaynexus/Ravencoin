@@ -236,7 +236,7 @@ BOOST_FIXTURE_TEST_SUITE(asset_tests, BasicTestingSetup)
         txOut.scriptPubKey = scriptPubKey;
 
 
-        Coin coin(txOut, 0, 0);
+        Coin coin(txOut, 0, 0, 0);
 
         BOOST_CHECK_MESSAGE(coin.IsAsset(), "Transfer Asset Coin isn't as asset");
     }
@@ -256,7 +256,7 @@ BOOST_FIXTURE_TEST_SUITE(asset_tests, BasicTestingSetup)
         txOut.nValue = 0;
         txOut.scriptPubKey = scriptPubKey;
 
-        Coin coin(txOut, 0, 0);
+        Coin coin(txOut, 0, 0, 0);
 
         BOOST_CHECK_MESSAGE(coin.IsAsset(), "New Asset Coin isn't as asset");
     }

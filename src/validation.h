@@ -475,6 +475,13 @@ public:
     ~CVerifyDB();
     bool VerifyDB(const CChainParams& chainparams, CCoinsView *coinsview, int nCheckLevel, int nCheckDepth);
 };
+//////////////////////////////////////////////////////// qtum
+bool GetSpentCoinFromBlock(const CBlockIndex* pindex, COutPoint prevout, Coin* coin);
+
+bool GetSpentCoinFromMainChain(const CBlockIndex* pforkPrev, COutPoint prevoutStake, Coin* coin);
+bool CheckStake(CBlock* pblock, CWallet& wallet, const CChainParams& chainparams);
+bool BroadcastPoSBlock(CBlock* pblock, CWallet& wallet, const CChainParams& chainparams);
+//////////////////////////////////////////////////////// qtum
 
 /** Replay blocks that aren't fully applied to the database. */
 bool ReplayBlocks(const CChainParams& params, CCoinsView* view);

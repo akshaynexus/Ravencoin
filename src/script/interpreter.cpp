@@ -63,7 +63,7 @@ static inline void popstack(std::vector<valtype> &stack)
     stack.pop_back();
 }
 
-bool static IsCompressedOrUncompressedPubKey(const valtype &vchPubKey)
+bool IsCompressedOrUncompressedPubKey(const std::vector<unsigned char> &vchPubKey)
 {
     if (vchPubKey.size() < 33)
     {

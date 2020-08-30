@@ -43,7 +43,7 @@ BOOST_FIXTURE_TEST_SUITE(asset_tx_tests, BasicTestingSetup)
 
         // Add the coin to the cache
         COutPoint outpoint(hash, 1);
-        coins.AddCoin(outpoint, Coin(txOut, 10, 0), true);
+        coins.AddCoin(outpoint, Coin(txOut, 10, 0, 0), true);
 
         // Create transaction and input for the outpoint of the coin we just created
         CMutableTransaction mutTx;
@@ -90,7 +90,7 @@ BOOST_FIXTURE_TEST_SUITE(asset_tx_tests, BasicTestingSetup)
 
         // Add the coin to the cache
         COutPoint outpoint(hash, 1);
-        coins.AddCoin(outpoint, Coin(txOut, 10, 0), true);
+        coins.AddCoin(outpoint, Coin(txOut, 10, 0, 0), true);
 
         // Create transaction and input for the outpoint of the coin we just created
         CMutableTransaction mutTx;
@@ -147,7 +147,7 @@ BOOST_FIXTURE_TEST_SUITE(asset_tx_tests, BasicTestingSetup)
 
         // Add the coin to the cache
         COutPoint outpoint(hash, 1);
-        coins.AddCoin(outpoint, Coin(txOut, 10, 0), true);
+        coins.AddCoin(outpoint, Coin(txOut, 10, 0, 0), true);
 
         // Create transaction and input for the outpoint of the coin we just created
         CMutableTransaction mutTx;
@@ -208,7 +208,7 @@ BOOST_FIXTURE_TEST_SUITE(asset_tx_tests, BasicTestingSetup)
 
         // Add the coin to the cache
         COutPoint outpoint(hash, 1);
-        coins.AddCoin(outpoint, Coin(txOut, 10, 0), true);
+        coins.AddCoin(outpoint, Coin(txOut, 10, 0, 0), true);
 
         // Create transaction and input for the outpoint of the coin we just created
         CMutableTransaction mutTx;
@@ -287,13 +287,13 @@ BOOST_FIXTURE_TEST_SUITE(asset_tx_tests, BasicTestingSetup)
 
         // Add the coins to the cache
         COutPoint outpoint(hash, 1);
-        coins.AddCoin(outpoint, Coin(txOut, 10, 0), true);
+        coins.AddCoin(outpoint, Coin(txOut, 10, 0, 0), true);
 
         COutPoint outpoint2(hash2, 1);
-        coins.AddCoin(outpoint2, Coin(txOut2, 10, 0), true);
+        coins.AddCoin(outpoint2, Coin(txOut2, 10, 0, 0), true);
 
         COutPoint outpoint3(hash3, 1);
-        coins.AddCoin(outpoint3, Coin(txOut3, 10, 0), true);
+        coins.AddCoin(outpoint3, Coin(txOut3, 10, 0, 0), true);
 
         Coin coinTemp;
         BOOST_CHECK_MESSAGE(coins.GetCoin(outpoint, coinTemp), "Failed to get coin 1");
@@ -504,7 +504,7 @@ BOOST_FIXTURE_TEST_SUITE(asset_tx_tests, BasicTestingSetup)
 
         // Add the coin to the cache
         COutPoint outpoint(hash, 1);
-        coins.AddCoin(outpoint, Coin(txOut, 10, 0), true);
+        coins.AddCoin(outpoint, Coin(txOut, 10, 0, 0), true);
 
         // Create input
         CTxIn in;

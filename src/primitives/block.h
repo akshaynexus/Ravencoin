@@ -50,6 +50,8 @@ public:
     uint64_t nNonce64;
     uint256 mix_hash;
 
+    std::vector<unsigned char> vchBlockSig;//Proof Of Stake Block signature
+
     CBlockHeader()
     {
         SetNull();
@@ -70,6 +72,8 @@ public:
             READWRITE(nHeight);
             READWRITE(nNonce64);
             READWRITE(mix_hash);
+            if(nNonce64 == 0 || nNonce == 0)
+                READWRITE(vchBlockSig);
         }
     }
 
@@ -85,6 +89,7 @@ public:
         nNonce64 = 0;
         nHeight = 0;
         mix_hash.SetNull();
+        vchBlockSig.clear();
     }
 
     bool IsNull() const
@@ -109,6 +114,7 @@ public:
     {
         return (int64_t)nTime;
     }
+    bool IsProofOfStake() const {return (nNonce64 == 0 || nNonce == 0);}
 };
 
 
@@ -162,6 +168,8 @@ public:
         block.nHeight        = nHeight;
         block.nNonce64       = nNonce64;
         block.mix_hash       = mix_hash;
+        if(nNonce64 == 0 || nNonce == 0)
+            block.vchBlockSig    = vchBlockSig;
         return block;
     }
 
@@ -169,7 +177,16 @@ public:
     // {
     //     block.hashPrevBlock = prevHash;
     // }
+	// two types of block: proof-of-work or proof-of-stake
+    bool IsProofOfStake() const
+    {
+        return (vtx.size() > 1 && vtx[1]->IsCoinStake());
+    }
 
+    bool IsProofOfWork() const
+    {
+        return !IsProofOfStake();
+    }
     std::string ToString() const;
 };
 

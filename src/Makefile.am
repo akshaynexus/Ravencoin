@@ -140,6 +140,7 @@ RAVEN_CORE_H = \
   base58.h \
   bloom.h \
   blockencodings.h \
+  blockinfo/blockinfo.h \
   chain.h \
   chainparams.h \
   chainparamsbase.h \
@@ -181,6 +182,7 @@ RAVEN_CORE_H = \
   policy/policy.h \
   policy/rbf.h \
   pow.h \
+  pos.h \
   protocol.h \
   random.h \
   reverse_iterator.h \
@@ -250,6 +252,7 @@ libraven_server_a_SOURCES = \
   addrman.cpp \
   bloom.cpp \
   blockencodings.cpp \
+  blockinfo/blockinfo.cpp \
   chain.cpp \
   checkpoints.cpp \
   consensus/consensus.cpp \
@@ -276,6 +279,7 @@ libraven_server_a_SOURCES = \
   policy/policy.cpp \
   policy/rbf.cpp \
   pow.cpp \
+  pos.cpp \
   rest.cpp \
   rpc/assets.cpp \
   rpc/blockchain.cpp \

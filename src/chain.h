@@ -162,6 +162,7 @@ enum BlockStatus: uint32_t {
     BLOCK_FAILED_MASK        =   BLOCK_FAILED_VALID | BLOCK_FAILED_CHILD,
 
     BLOCK_OPT_WITNESS       =   128, //!< block data in blk*.data was received with a witness-enforcing client
+    BLOCK_PROOF_OF_STAKE     =   256, //! is proof-of-stake block
 };
 
 /** The block chain is a tree shaped structure starting with the
@@ -214,6 +215,7 @@ public:
     uint32_t nTime;
     uint32_t nBits;
     uint32_t nNonce;
+    std::vector<unsigned char> vchBlockSig;
 
     // KAWPOW
     uint64_t nNonce64;
@@ -225,6 +227,8 @@ public:
     //! (memory only) Maximum nTime in the chain up to and including this block.
     unsigned int nTimeMax;
 
+	//! hash modifier of proof-of-stake
+    uint256 nStakeModifier;
     void SetNull()
     {
         phashBlock = nullptr;
@@ -246,10 +250,13 @@ public:
         nTime          = 0;
         nBits          = 0;
         nNonce         = 0;
+        vchBlockSig.clear();
 
         //KAWPOW
         nNonce64       = 0;
         mix_hash       = uint256();
+        //PoS
+        nStakeModifier = uint256();
     }
 
     CBlockIndex()
@@ -271,6 +278,8 @@ public:
         nHeight        = block.nHeight;
         nNonce64       = block.nNonce64;
         mix_hash       = block.mix_hash;
+        if(nNonce64 == 0 || nNonce == 0)
+            vchBlockSig    = block.vchBlockSig; // qtum
 
     }
 
@@ -305,6 +314,8 @@ public:
         block.nHeight        = nHeight;
         block.nNonce64       = nNonce64;
         block.mix_hash       = mix_hash;
+        if(nNonce64 == 0 || nNonce == 0)
+            block.vchBlockSig    = vchBlockSig;
         return block;
     }
 
@@ -323,7 +334,22 @@ public:
         return (int64_t)nTimeMax;
     }
 
+    bool IsProofOfWork() const
+    {
+        return !IsProofOfStake();
+    }
+
+    bool IsProofOfStake() const
+    {
+        return nNonce == 0 || nStatus & BLOCK_PROOF_OF_STAKE;
+    }
+
     enum { nMedianTimeSpan=11 };
+
+    int64_t GetPastTimeLimit() const
+    {
+        return GetMedianTimePast();
+    }
 
     int64_t GetMedianTimePast() const
     {
@@ -430,7 +456,8 @@ public:
             READWRITE(nNonce64);
             READWRITE(mix_hash);
         }
-
+	    // PoS
+        READWRITE(nStakeModifier);
     }
 
     uint256 GetBlockHash() const

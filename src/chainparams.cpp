@@ -550,6 +550,10 @@ public:
         // By default assume that the signatures in ancestors of this block are valid.
         consensus.defaultAssumeValid = uint256S("0x00");
 
+        //Proof-of-Stake related values
+        consensus.nFirstPOSBlock = 135;//TODO akshaynexus :This needs to be decided
+        consensus.nStakeTimestampMask = 0xf; // 15
+
         pchMessageStart[0] = 0x43; // C
         pchMessageStart[1] = 0x52; // R
         pchMessageStart[2] = 0x4F; // O

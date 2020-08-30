@@ -1940,6 +1940,11 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
 
 #ifdef ENABLE_WALLET
     StartWallets(scheduler);
+	// Mine proof-of-stake blocks in the background
+    if (!gArgs.GetBoolArg("-staking", true))
+        LogPrintf("Staking disabled\n");
+    else if (GetFirstWallet())
+        threadGroup.create_thread(boost::bind(&ThreadStakeMiner, GetFirstWallet(), chainparams));
 
 
     // ********************************************************* Step 12: Init Msg Channel list

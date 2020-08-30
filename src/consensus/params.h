@@ -78,6 +78,9 @@ struct Params {
     uint256 defaultAssumeValid;
     bool nSegwitEnabled;
     bool nCSVEnabled;
+    // proof-of-stake
+    int nFirstPOSBlock;
+    int nStakeTimestampMask;
 };
 } // namespace Consensus
 

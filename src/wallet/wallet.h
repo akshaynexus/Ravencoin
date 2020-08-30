@@ -8,7 +8,10 @@
 #define RAVEN_WALLET_WALLET_H
 
 #include "amount.h"
+#include "miner.h"
 #include "policy/feerate.h"
+#include "pos.h"
+
 #include "streams.h"
 #include "tinyformat.h"
 #include "ui_interface.h"
@@ -679,6 +682,7 @@ private:
     static std::atomic<bool> fFlushScheduled;
     std::atomic<bool> fAbortRescan;
     std::atomic<bool> fScanningWallet;
+    std::atomic<bool> m_enabled_staking{true};
 
     /**
      * Select a set of coins such that nValueRet >= nTargetValue and at least
@@ -700,6 +704,7 @@ private:
     int64_t nNextResend;
     int64_t nLastResend;
     bool fBroadcastTransactions;
+    std::map<COutPoint, CStakeCache> stakeCache;
 
     /**
      * Used to keep track of spent outpoints, and
@@ -1116,6 +1121,15 @@ public:
         return setInternalKeyPool.size() + setExternalKeyPool.size();
     }
 
+    void setEnabledStaking(bool enabled)
+    {
+        m_enabled_staking = enabled;
+    }
+    bool getEnabledStaking()
+    {
+        return m_enabled_staking;
+    }
+
     //! signify that a particular wallet feature is now used. this may change nWalletVersion and nWalletMaxVersion if those are lower
     bool SetMinVersion(enum WalletFeature, CWalletDB* pwalletdbIn = nullptr, bool fExplicit = false);
 
@@ -1176,6 +1190,13 @@ public:
 
     /* Mark a transaction (and it in-wallet descendants) as abandoned so its inputs may be respent. */
     bool AbandonTransaction(const uint256& hashTx);
+
+	/* Staking */
+    bool CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int64_t nTime, int64_t nSearchInterval, CAmount& nFees, CMutableTransaction& tx, CKey& key, CBlockTemplate *pblocktemplate);
+    bool SelectCoinsForStaking(CAmount& nTargetValue, std::set<std::pair<const CWalletTx*,unsigned int> >& setCoinsRet, CAmount& nValueRet) const;
+    void AvailableCoinsForStaking(std::vector<COutput>& vCoins) const;
+    bool HaveAvailableCoinsForStaking() const;
+    uint64_t GetStakeWeight() const;
 
     /** Mark a transaction as replaced by another transaction (e.g., BIP 125). */
     bool MarkReplaced(const uint256& originalHash, const uint256& newHash);
